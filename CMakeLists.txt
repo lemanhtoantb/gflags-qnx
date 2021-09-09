@@ -72,6 +72,12 @@
 
 cmake_minimum_required (VERSION 3.0.2 FATAL_ERROR)
 
+option (QNX "QNX 7 support" OFF)
+
+if (QNX)
+  include(cmake/qnx7_aarch64le.cmake)
+endif()
+
 if (POLICY CMP0042)
   cmake_policy (SET CMP0042 NEW)
 endif ()
@@ -114,6 +120,10 @@ version_numbers (
     PACKAGE_VERSION_MINOR
     PACKAGE_VERSION_PATCH
 )
+
+if (QNX)
+  set (CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-qnx-arrch64le)
+endif () 
 
 # shared library ABI version number, can be overridden by package maintainers
 # using -DGFLAGS_SOVERSION=XXX on the command-line
@@ -168,17 +178,17 @@ list (REMOVE_AT GFLAGS_NAMESPACE_SECONDARY 0)
 
 # cached build options when gflags is not a subproject, otherwise non-cached CMake variables
 # usage: gflags_define(BOOL <name> <doc> <default> [<subproject default>])
-gflags_define (BOOL BUILD_SHARED_LIBS          "Request build of shared libraries."                                       OFF OFF)
+gflags_define (BOOL BUILD_SHARED_LIBS          "Request build of shared libraries."                                       ON  ON)
 gflags_define (BOOL BUILD_STATIC_LIBS          "Request build of static libraries (default if BUILD_SHARED_LIBS is OFF)." OFF ON)
 gflags_define (BOOL BUILD_gflags_LIB           "Request build of the multi-threaded gflags library."                      ON  OFF)
 gflags_define (BOOL BUILD_gflags_nothreads_LIB "Request build of the single-threaded gflags library."                     ON  ON)
 gflags_define (BOOL BUILD_PACKAGING            "Enable build of distribution packages using CPack."                       OFF OFF)
 gflags_define (BOOL BUILD_TESTING              "Enable build of the unit tests and their execution using CTest."          OFF OFF)
-gflags_define (BOOL INSTALL_HEADERS            "Request installation of headers and other development files."             ON  OFF)
+gflags_define (BOOL INSTALL_HEADERS            "Request installation of headers and other development files."             ON  ON)
 gflags_define (BOOL INSTALL_SHARED_LIBS        "Request installation of shared libraries."                                ON  ON)
 gflags_define (BOOL INSTALL_STATIC_LIBS        "Request installation of static libraries."                                ON  OFF)
 gflags_define (BOOL REGISTER_BUILD_DIR         "Request entry of build directory in CMake's package registry."            OFF OFF)
-gflags_define (BOOL REGISTER_INSTALL_PREFIX    "Request entry of installed package in CMake's package registry."          ON  OFF)
+gflags_define (BOOL REGISTER_INSTALL_PREFIX    "Request entry of installed package in CMake's package registry."          OFF  OFF)
 
 gflags_property (BUILD_STATIC_LIBS   ADVANCED TRUE)
 gflags_property (INSTALL_HEADERS     ADVANCED TRUE)
@@ -436,6 +446,7 @@ else ()
   set (INCLUDE_INSTALL_DIR include)
   set (CONFIG_INSTALL_DIR  ${LIBRARY_INSTALL_DIR}/cmake/${PACKAGE_NAME})
   set (PKGCONFIG_INSTALL_DIR ${LIBRARY_INSTALL_DIR}/pkgconfig)
+
 endif ()
 
 # ----------------------------------------------------------------------------

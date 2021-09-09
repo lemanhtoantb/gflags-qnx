@@ -3,6 +3,31 @@
 
 The documentation of the gflags library is available online at https://gflags.github.io/gflags/.
 
+09 September 2021 - QNX 7 aarch64 cross-compile support
+----------------
+* How to build:
+
+cd to `gflags-qnx`.
+
+Export qnx build environment:
+
+```
+source <path-to-you-qnx700>/qnxsdp-env.sh
+
+```
+
+Build:
+
+```
+mkdir build
+cd build
+cmake -DQNX=ON ..
+make
+make install
+
+```
+
+The installed folder will be in your build dir, named: `gflags-2.2.2-qnx-arrch64le`
 
 11 November 2018
 ----------------
